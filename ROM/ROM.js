@@ -110,9 +110,10 @@ function ROM(){
 			}
 		}
 		var tempArray = getMiniNumFromMatrix(this.node);
-		minNum = parseInt(tempArray[0]);
-		minX = parseInt(tempArray[1]);
-		minY = parseInt(tempArray[2]);
+		minNum = tempArray[0];
+		//console.log(minNum);
+		minX = tempArray[1];
+		minY = tempArray[2];
 		this.Y[minX][minY] = 1;		//if j=j*, k=k*, node[j][k] = 1, else node[j][k] = 0
 		error = Math.sqrt(this.node[minX][minY]);
 
@@ -125,7 +126,7 @@ function ROM(){
 		for(var j=0;j<this.numOfOutputX;j++){
 			for(var k=0;k<this.numOfOutputY;k++){
 				r[j][k] = Math.sqrt(euclideanDistance(j, minX) + euclideanDistance(k, minY));
-				neighborhood[j][k] = Math.exp((-r[j][k])/this.R);
+				neighborhood[j][k] = Math.exp((-r[j][k])/(this.R*radiusRate));
 				for(var i=0;i<this.numOfInput;i++){
 					this.dW[i][j][k] = learningRate * (this.X[i] - this.W[i][j][k]) * neighborhood[j][k];
 					this.W[i][j][k] += this.dW[i][j][k];
@@ -141,24 +142,25 @@ function ROM(){
 			for(var i in inputData){
 				error += this.update(inputData[i], learningRate, radiusRate);
 			}
-			if(iteration%(iteration*0.05) ==0){
+			if(iteration%(iteration*0.01) ==0){
 				console.log(error);
-				learningRate *= 0.9;
-				radiusRate *= 0.9;	
+				learningRate *= 0.99;
+				radiusRate *= 0.99;	
 			}
 		}
 
 	}
 }
 
+module.exports = ROM;
 
 
-var inputData = [
-					[19,334,5],
-					[191,53,432],
-					[19,334,5],
-					[15229,43,15]
-					];
-var rom = new ROM();
-rom.init(3, 10, 10);
-rom.train(inputData, 100000, 1.0, 1.0);
+// var inputData = [
+// 					[19,334,5],
+// 					[191,53,432],
+// 					[19,334,5],
+// 					[15229,43,15]
+// 					];
+// var rom = new ROM();
+// rom.init(3, 10, 10);
+// rom.train(inputData, 100000, 1.0, 1.0);
