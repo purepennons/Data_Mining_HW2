@@ -34,9 +34,9 @@ for(i in array) {
     }
 }
 console.log('Iris');
-console.log(inputDataForROM);
+//console.log(inputDataForROM);
 var rom = new ROM();
 rom.init(ni, 5, 5);
-rom.train(inputDataForROM, 100000, 0.3, 0.3);
+rom.train(inputDataForROM, 100000, 1.0, 1.0);
 
 

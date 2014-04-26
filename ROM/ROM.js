@@ -81,7 +81,7 @@ function ROM(){
 		for(var i in this.W){
 			for(var j in this.W[0]){
 				for(var k in this.W[0][0]){
-					this.W[i][j][k] = getRandomNum(-0.5, 0.5);
+					this.W[i][j][k] = getRandomNum(0.0, 1.0);
 				}
 			}
 		}
@@ -111,7 +111,6 @@ function ROM(){
 		}
 		var tempArray = getMiniNumFromMatrix(this.node);
 		minNum = tempArray[0];
-		//console.log(minNum);
 		minX = tempArray[1];
 		minY = tempArray[2];
 		this.Y[minX][minY] = 1;		//if j=j*, k=k*, node[j][k] = 1, else node[j][k] = 0
@@ -142,10 +141,11 @@ function ROM(){
 			for(var i in inputData){
 				error += this.update(inputData[i], learningRate, radiusRate);
 			}
-			if(iteration%(iteration*0.01) ==0){
+			if(iteration%(100) ==0){
+				learningRate *= 0.999;
+				radiusRate *= 0.999;	
+				console.log('a = ' + learningRate + ' b = ' + radiusRate);
 				console.log(error);
-				learningRate *= 0.99;
-				radiusRate *= 0.99;	
 			}
 		}
 
