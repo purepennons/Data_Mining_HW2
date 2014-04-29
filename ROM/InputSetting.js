@@ -35,8 +35,9 @@ for(i in array) {
 }
 console.log('Dataset: Iris');
 var rom = new ROM();
-rom.init(ni, 20, 20);
-rom.train(inputDataForROM, 10000, 1.0, 1.0);
+rom.init(ni, 5, 5);
+rom.train(inputDataForROM, 1000, 1.0, 1.0);
 console.log(rom.recall(inputDataForROM));
+console.log(rom.errorArray);
 console.log(rom.recallWinnerMatrix);
 
