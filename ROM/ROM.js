@@ -64,11 +64,15 @@ function ROM(){
 	this.X = null;
 	this.W = null;
 	this.dW = null;
-	this.node = null;
 	this.Y = null;
 	this.R = 0;
+	this.errorArray = null;
+	this.recallWinnerMatrix = null;
+	this.initFlag = false;
+	this.trainFlag = false;
 
 	this.init = function(numOfInput, numOfOutputX, numOfOutputY){  //初始化參數與陣列
+		this.initFlag = true;
 		this.numOfInput = numOfInput;
 		this.numOfOutputX = numOfOutputX;
 		this.numOfOutputY = numOfOutputY;
@@ -81,7 +85,7 @@ function ROM(){
 		for(var i in this.W){
 			for(var j in this.W[0]){
 				for(var k in this.W[0][0]){
-					this.W[i][j][k] = getRandomNum(0.0, 1.0);
+					this.W[i][j][k] = getRandomNum(0.0, 10.0);
 				}
 			}
 		}
@@ -93,7 +97,7 @@ function ROM(){
 	this.update = function(input, learningRate, radiusRate) {
 		var minNum = 0, minX = 0, minY = 0;
 		var error = 0;
-		this.node = createMatrix(this.numOfOutputX, this.numOfOutputY, 0);
+		var node = createMatrix(this.numOfOutputX, this.numOfOutputY, 0);
 		var neighborhood = createMatrix(this.numOfOutputX, this.numOfOutputY, 0);
 		var r = createMatrix(this.numOfOutputX, this.numOfOutputY, 0);
 		this.Y = createMatrix(this.numOfOutputX, this.numOfOutputY, 0);
@@ -105,16 +109,16 @@ function ROM(){
 		for(var j=0;j<this.numOfOutputX;j++){
 			for(var k=0;k<this.numOfOutputY;k++){
 				for(var i=0;i<this.numOfInput;i++){
-					this.node[j][k] += euclideanDistance(this.X[i], this.W[i][j][k]);
+					node[j][k] += euclideanDistance(this.X[i], this.W[i][j][k]);
 				}
 			}
 		}
-		var tempArray = getMiniNumFromMatrix(this.node);
+		var tempArray = getMiniNumFromMatrix(node);
 		minNum = tempArray[0];
 		minX = tempArray[1];
 		minY = tempArray[2];
 		this.Y[minX][minY] = 1;		//if j=j*, k=k*, node[j][k] = 1, else node[j][k] = 0
-		error = Math.sqrt(this.node[minX][minY]);
+		error = Math.sqrt(node[minX][minY]);
 
 		//計算neighborhood與dW，並且更新this.W
 		this.dW = createArray(this.numOfInput, 0);
@@ -135,32 +139,63 @@ function ROM(){
 		return error;
 	}
 
+	this.clustering = function(input, countMatrix) {
+		var recallX = createArray(this.numOfInput, 0);
+		var minNum = 0, minX = 0, minY = 0;
+		var node = createMatrix(this.numOfOutputX, this.numOfOutputY, 0);
+		for(var data in input){
+			recallX[data] = input[data];
+		}
+
+		//select winner node
+		for(var j=0;j<this.numOfOutputX;j++){
+			for(var k=0;k<this.numOfOutputY;k++){
+				for(var i=0;i<this.numOfInput;i++){
+					node[j][k] += euclideanDistance(recallX[i], this.W[i][j][k]);
+				}
+			}
+		}
+		var tempArray = getMiniNumFromMatrix(node);
+		minNum = tempArray[0];
+		minX = tempArray[1];
+		minY = tempArray[2];
+		countMatrix[minX][minY] = parseInt(countMatrix[minX][minY]) + 1;
+		return countMatrix;
+	}
+
 	this.train = function(inputData, maxTrainTimes, learningRate, radiusRate) {
+		if(!this.initFlag){
+			return false;
+		}
+		this.trainFlag = true;
+		this.errorArray = new Array();
 		for(var iteration=0;iteration<maxTrainTimes;iteration++){
 			var error = 0;
 			for(var i in inputData){
 				error += this.update(inputData[i], learningRate, radiusRate);
 			}
-			if(iteration%(100) ==0){
-				learningRate *= 0.999;
-				radiusRate *= 0.999;	
-				console.log('a = ' + learningRate + ' b = ' + radiusRate);
-				console.log(error);
+			this.errorArray.push(error);
+			if(iteration%(iteration*0.01) ==0){
+				learningRate *= 0.9;
+				radiusRate *= 0.9;	
+				//console.log('a = ' + learningRate + ' b = ' + radiusRate);
+				console.log('#' + iteration + ' : ' + error);
 			}
 		}
+		return true;
+	}
 
+	this.recall = function(inputData) {
+		if(!this.initFlag || !this.trainFlag){
+			return false;
+		}
+		this.recallWinnerMatrix = createMatrix(this.numOfOutputX, this.numOfOutputY, 0);
+		for(var i in inputData){
+			this.recallWinnerMatrix = this.clustering(inputData[i], this.recallWinnerMatrix);
+		}
+		return true;
 	}
 }
 
 module.exports = ROM;
 
-
-// var inputData = [
-// 					[19,334,5],
-// 					[191,53,432],
-// 					[19,334,5],
-// 					[15229,43,15]
-// 					];
-// var rom = new ROM();
-// rom.init(3, 10, 10);
-// rom.train(inputData, 100000, 1.0, 1.0);
