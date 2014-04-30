@@ -85,7 +85,7 @@ function ROM(){
 		for(var i in this.W){
 			for(var j in this.W[0]){
 				for(var k in this.W[0][0]){
-					this.W[i][j][k] = getRandomNum(0.0, 10.0);
+					this.W[i][j][k] = getRandomNum(0.0, 1.0);
 				}
 			}
 		}
@@ -175,9 +175,9 @@ function ROM(){
 				error += this.update(inputData[i], learningRate, radiusRate);
 			}
 			this.errorArray.push(error);
-			if(iteration%(iteration*0.01) ==0){
-				learningRate *= 0.9;
-				radiusRate *= 0.9;	
+			learningRate *= 1.0;
+			radiusRate *= 0.95;	
+			if(iteration%(maxTrainTimes*0.01) ==0){
 				//console.log('a = ' + learningRate + ' b = ' + radiusRate);
 				console.log('#' + iteration + ' : ' + error);
 			}

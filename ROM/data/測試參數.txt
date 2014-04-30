@@ -1,0 +1,16 @@
+測試參數：
+1.改變拓撲數
+	training times: 200
+	learning rate: 0.95
+	radius rate: 1.0
+	topology: 5x5, 10x10, 20x20
+	learningRate *= 1.0;
+	radiusRate *= 0.95;	
+
+2.改變訓練比率
+	training times: 200
+	learning rate: 0.3, 0.6, 0.9
+	radius rate: 1.0
+	topology: 20x20
+	learningRate *= 1.0;
+	radiusRate *= 0.95;	

@@ -1,4 +1,5 @@
 var ROM = require('./ROM.js');
+var fileAPI = require('./FileAPI.js');
 var ni = 4;
 var no = 1;
 var inputData;
@@ -33,11 +34,52 @@ for(i in array) {
             break;
     }
 }
-console.log('Dataset: Iris');
-var rom = new ROM();
-rom.init(ni, 5, 5);
-rom.train(inputDataForROM, 1000, 1.0, 1.0);
-console.log(rom.recall(inputDataForROM));
-console.log(rom.errorArray);
-console.log(rom.recallWinnerMatrix);
 
+
+var rom = new ROM();
+var fsApi = new fileAPI();
+var errorArray = null;
+var winnerMatrix = null;
+var topologyP =[5, 10, 20];
+var iterationP = [1000, 10000, 100000];
+var learningRateP = [0.3, 0.6, 0.9];
+
+console.log('Dataset: Iris');
+
+//Different network topologies
+// for(var i=0;i<3;i++){
+//     rom.init(ni, topologyP[i], topologyP[i]);
+//     rom.train(inputDataForROM, 200, 0.95, 1.0);
+//     rom.recall(inputDataForROM);
+//     errorArray = rom.errorArray;
+//     winnerMatrix = rom.recallWinnerMatrix;
+//     if(fsApi.isExist('./changeTopologyLiner' + i + '.dat')){
+//         fsApi.removeFile('./', 'changeTopologyLiner' + i + '.dat');
+//     }
+//     fsApi.appendStringArrayToFile('changeTopologyLiner' + i + '.dat', errorArray);
+    
+//     if(fsApi.isExist('./changeTopologyLiner3D' + i + '.dat')){
+//         fsApi.removeFile('./', 'changeTopologyLiner3D' + i + '.dat');
+//     }
+//     fsApi.appendStringMatrixAndCoordinateToFile('changeTopologyLiner3D' + i + '.dat', winnerMatrix);
+
+// } 
+
+//Different learning rate 
+for(var i=0;i<3;i++){
+    rom.init(ni, 20, 20);
+    rom.train(inputDataForROM, 200, learningRateP[i], 1.0);
+    rom.recall(inputDataForROM);
+    errorArray = rom.errorArray;
+    winnerMatrix = rom.recallWinnerMatrix;
+    if(fsApi.isExist('./changeLearningRate' + i + '.dat')){
+        fsApi.removeFile('./', 'changeLearningRate' + i + '.dat');
+    }
+    fsApi.appendStringArrayToFile('changeLearningRate' + i + '.dat', errorArray);
+    
+    if(fsApi.isExist('./changeLearningRate3D' + i + '.dat')){
+        fsApi.removeFile('./', 'changeLearningRate3D' + i + '.dat');
+    }
+    fsApi.appendStringMatrixAndCoordinateToFile('changeLearningRate3D' + i + '.dat', winnerMatrix);
+
+} 
