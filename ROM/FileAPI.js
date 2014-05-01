@@ -27,10 +27,15 @@ function FileAPI(){
 				// 	if(err) throw err;
 				// 	console.log('write data to ' + filename +  ' success.');
 				// });
-				fs.appendFileSync(filename, i + ' ' + j + ' '  +  strMatrix[i][j] + '\n' + '\n');
+				fs.appendFileSync(filename, i + ' ' + j + ' '  +  strMatrix[i][j] + '\n');
 			}
 		} 
 		console.log('write data to ' + filename +  ' success.');
+	}
+
+	this.createDirectory = function(path) {
+		fs.mkdirSync(path);
+		console.log('create a directory in ' + path);
 	}
 
 

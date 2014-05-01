@@ -42,44 +42,53 @@ var errorArray = null;
 var winnerMatrix = null;
 var topologyP =[5, 10, 20];
 var iterationP = [1000, 10000, 100000];
-var learningRateP = [0.3, 0.6, 0.9];
+var learningRateP = [0.3, 0.6, 0.95];
 
 console.log('Dataset: Iris');
+if(!fsApi.isExist('./dat')){
+    fsApi.createDirectory('./dat');
+}
 
 //Different network topologies
-// for(var i=0;i<3;i++){
-//     rom.init(ni, topologyP[i], topologyP[i]);
-//     rom.train(inputDataForROM, 200, 0.95, 1.0);
-//     rom.recall(inputDataForROM);
-//     errorArray = rom.errorArray;
-//     winnerMatrix = rom.recallWinnerMatrix;
-//     if(fsApi.isExist('./changeTopologyLiner' + i + '.dat')){
-//         fsApi.removeFile('./', 'changeTopologyLiner' + i + '.dat');
-//     }
-//     fsApi.appendStringArrayToFile('changeTopologyLiner' + i + '.dat', errorArray);
+console.log('Start to train in different network topologies.');
+for(var i=0;i<3;i++){
+    rom.init(ni, topologyP[i], topologyP[i]);
+    rom.train(inputDataForROM, 200, 0.95, 1.0);
+    rom.recall(inputDataForROM);
+    errorArray = rom.errorArray;
+    winnerMatrix = rom.recallWinnerMatrix;
+    console.log('Recall result.');
+    console.log(winnerMatrix);
+    if(fsApi.isExist('./dat/changeTopologyLiner' + i + '.dat')){
+        fsApi.removeFile('./dat/', 'changeTopologyLiner' + i + '.dat');
+    }
+    fsApi.appendStringArrayToFile('./dat/changeTopologyLiner' + i + '.dat', errorArray);
     
-//     if(fsApi.isExist('./changeTopologyLiner3D' + i + '.dat')){
-//         fsApi.removeFile('./', 'changeTopologyLiner3D' + i + '.dat');
-//     }
-//     fsApi.appendStringMatrixAndCoordinateToFile('changeTopologyLiner3D' + i + '.dat', winnerMatrix);
+    if(fsApi.isExist('./dat/changeTopologyLiner3D' + i + '.dat')){
+        fsApi.removeFile('./dat/', 'changeTopologyLiner3D' + i + '.dat');
+    }
+    fsApi.appendStringMatrixAndCoordinateToFile('./dat/changeTopologyLiner3D' + i + '.dat', winnerMatrix);
 
-// } 
+} 
 
-//Different learning rate 
+//Different learning rate
+console.log('Start to train in different learning rates');
 for(var i=0;i<3;i++){
     rom.init(ni, 20, 20);
     rom.train(inputDataForROM, 200, learningRateP[i], 1.0);
     rom.recall(inputDataForROM);
     errorArray = rom.errorArray;
     winnerMatrix = rom.recallWinnerMatrix;
-    if(fsApi.isExist('./changeLearningRate' + i + '.dat')){
-        fsApi.removeFile('./', 'changeLearningRate' + i + '.dat');
+    console.log('Recall result.');
+    console.log(winnerMatrix);    
+    if(fsApi.isExist('./dat/changeLearningRate' + i + '.dat')){
+        fsApi.removeFile('./dat/', 'changeLearningRate' + i + '.dat');
     }
-    fsApi.appendStringArrayToFile('changeLearningRate' + i + '.dat', errorArray);
+    fsApi.appendStringArrayToFile('./dat/changeLearningRate' + i + '.dat', errorArray);
     
-    if(fsApi.isExist('./changeLearningRate3D' + i + '.dat')){
-        fsApi.removeFile('./', 'changeLearningRate3D' + i + '.dat');
+    if(fsApi.isExist('./dat/changeLearningRate3D' + i + '.dat')){
+        fsApi.removeFile('./dat/', 'changeLearningRate3D' + i + '.dat');
     }
-    fsApi.appendStringMatrixAndCoordinateToFile('changeLearningRate3D' + i + '.dat', winnerMatrix);
+    fsApi.appendStringMatrixAndCoordinateToFile('./dat/changeLearningRate3D' + i + '.dat', winnerMatrix);
 
 } 
