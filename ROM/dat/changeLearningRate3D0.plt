@@ -1,7 +1,7 @@
 reset
 set title "Different Network Topologies" font "Times-Roman, 26"
 set term postscript eps 22 color dashed linewidth 2
-set output "Different_network_topologies_learning rate_0.3.eps"
+set output "Different_learning_rate_0.3.eps"
 set dgrid3d 20,20,1	
 #set nohidden3d
 set ticslevel 0.5

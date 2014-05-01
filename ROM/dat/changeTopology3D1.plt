@@ -2,6 +2,8 @@ reset
 set title "Different Network Topologies" font "Times-Roman, 26" #修改10x10
 set term postscript eps 22 color dashed linewidth 2
 set output "Different_network_topologies_10x10.eps"	#修改10x10
+#set term jpeg enhanced font "Helvetica"
+#set output "Different_network_topologies_10x10.jpeg" 
 set dgrid3d 10,10,1	#修改10,10,1
 #set nohidden3d
 set ticslevel 0.10

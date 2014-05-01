@@ -17,4 +17,4 @@ set style line 3 lt 1 pt 3 ps 2 lw 4 lc rgb "blue"
 plot \
 	"changeLearningRate0.dat" using 1 title '0.3' ls 1 with lines, \
 	"changeLearningRate1.dat" using 1 title '0.6' ls 2 with lines, \
-	"changeLearningRate2.dat" using 1 title '0.9' ls 3 with lines
+	"changeLearningRate2.dat" using 1 title '0.95' ls 3 with lines

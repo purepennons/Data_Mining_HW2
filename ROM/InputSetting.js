@@ -1,3 +1,5 @@
+var exec = require('child_process').exec,
+    child;
 var ROM = require('./ROM.js');
 var fileAPI = require('./FileAPI.js');
 var ni = 4;
@@ -7,6 +9,18 @@ var fs = require('fs');
 var array = fs.readFileSync('iris.data.txt').toString().split("\n");  //同步讀檔
 var inputArray = new Array(array.length);
 var inputDataForROM = new Array(array.length);
+
+var systemCall = function(cmd, path){
+    child = exec(cmd, {cwd: path}, 
+      function (error, stdout, stderr) {
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+    });
+}
+
 for(var i=0;i<array.length;i++){
     inputArray[i] = new Array(2);
     inputArray[i][0] = new Array(ni);
@@ -68,7 +82,8 @@ for(var i=0;i<3;i++){
         fsApi.removeFile('./dat/', 'changeTopologyLiner3D' + i + '.dat');
     }
     fsApi.appendStringMatrixAndCoordinateToFile('./dat/changeTopologyLiner3D' + i + '.dat', winnerMatrix);
-
+    systemCall('gnuplot ' + 'changeTopology3D' + i + '.plt',  '/Users/PureWind/documents/githubProject/Data_Mining_HW2/ROM/dat');
+    setTimeout(systemCall('open ' + 'Different_network_topologies_' + topologyP[i] + 'x' + topologyP[i] + '.eps',  '/Users/PureWind/documents/githubProject/Data_Mining_HW2/ROM/dat'), 5000);
 } 
 
 //Different learning rate
@@ -90,5 +105,8 @@ for(var i=0;i<3;i++){
         fsApi.removeFile('./dat/', 'changeLearningRate3D' + i + '.dat');
     }
     fsApi.appendStringMatrixAndCoordinateToFile('./dat/changeLearningRate3D' + i + '.dat', winnerMatrix);
+    systemCall('gnuplot ' + 'changeLearningRate3D' + i + '.plt',  '/Users/PureWind/documents/githubProject/Data_Mining_HW2/ROM/dat');
+    setTimeout(systemCall('open ' + 'Different_learning_rate_' + learningRateP[i] + '.eps',  '/Users/PureWind/documents/githubProject/Data_Mining_HW2/ROM/dat'), 5000);
 
-} 
+
+}
